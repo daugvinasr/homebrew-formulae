@@ -1,16 +1,18 @@
 class SpaceNumber < Formula
   desc "Menu bar space indicator for yabai"
   homepage "https://github.com/daugvinasr/space-number"
-  url "https://github.com/daugvinasr/space-number/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "f263deff8db065fac014ed10d374bf078087dcbfd9c3decfd51a70673b2eb419"
+  url "https://github.com/daugvinasr/space-number.git",
+      tag:      "v0.2.0",
+      revision: "bcf760667e53066a77e7257aad9c849f8ecfd99b"
   head "https://github.com/daugvinasr/space-number.git", branch: "main"
 
   depends_on :macos
 
   def install
-    system "swiftc", "-O", "SpaceNumber.swift", "-o", "space-number"
-    system "codesign", "--force", "-s", "-", "space-number"
-    bin.install "space-number"
+    commit = build.head? ? Utils.git_head(cached_download, length: 7) : stable.specs[:revision][0, 7]
+    system "make", "VERSION=#{version}", "COMMIT=#{commit}"
+    system "codesign", "--force", "-s", "-", "build/space-number"
+    bin.install "build/space-number"
   end
 
   service do
@@ -22,6 +24,6 @@ class SpaceNumber < Formula
   end
 
   test do
-    assert_predicate bin/"space-number", :executable?
+    assert_match version.to_s, shell_output("#{bin}/space-number --version")
   end
 end
