@@ -36,12 +36,6 @@ class NowPlayingBar < Formula
     <<~EOS
       To start now-playing-bar at login and keep it running:
         brew services start now-playing-bar
-
-      Preferences (restart the app after changing):
-        defaults write now-playing-bar hideArtistName -bool true
-        defaults write now-playing-bar cleanupTitle -bool true
-        defaults write now-playing-bar maxTextLength -int 60
-        defaults write now-playing-bar iconType -string icon
     EOS
   end
 
